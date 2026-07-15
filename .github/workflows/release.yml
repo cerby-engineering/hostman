@@ -100,36 +100,30 @@ jobs:
           files: artifacts/*.tar.gz
           generate_release_notes: true
 
-  update-homebrew:
+  update-formula:
     needs: [version, release]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
-      - name: Trigger Homebrew tap update
+      - uses: actions/checkout@v4
+
+      - name: Generate formula
         env:
-          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
-          VERSION: ${{ needs.version.outputs.version }}
-          TAG: ${{ needs.version.outputs.tag }}
-          ARM64_SHA: ${{ needs.release.outputs.arm64_sha }}
-          X86_64_SHA: ${{ needs.release.outputs.x86_64_sha }}
+          version: ${{ needs.version.outputs.version }}
+          tag: ${{ needs.version.outputs.tag }}
+          arm64_sha: ${{ needs.release.outputs.arm64_sha }}
+          x86_64_sha: ${{ needs.release.outputs.x86_64_sha }}
         run: |
-          set -x
-          jq -Mc -n \
-            --arg formula "host-man" \
-            --arg template_url "https://raw.githubusercontent.com/cerby-engineering/host-man/v${TAG}/homebrew/host-man.rb.template" \
-            --arg version "$VERSION" \
-            --arg tag "$TAG" \
-            --arg arm64_sha "$ARM64_SHA" \
-            --arg x86_64_sha "$X86_64_SHA" \
-            '{
-              event_type: "update-formula",
-              client_payload: {
-                formula: $formula,
-                template_url: $template_url,
-                version: $version,
-                tag: $tag,
-                arm64_sha: $arm64_sha,
-                x86_64_sha: $x86_64_sha
-              }
-            }' \
-            | gh api repos/cerby-engineering/homebrew-tap/dispatches --input -
+          mkdir -p Formula
+          envsubst < homebrew/host-man.rb.template > Formula/host-man.rb
+          cat Formula/host-man.rb
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/host-man.rb
+          git diff --staged --quiet || git commit -m "Update host-man formula to v${{ needs.version.outputs.version }} [skip ci]"
+          git push

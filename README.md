@@ -16,9 +16,12 @@ Boundary-tunneled targets.
 
 ### Via Homebrew (recommended)
 
+This repo is its own Homebrew tap (no separate tap repo, and no GitHub auth
+needed since it's public):
+
 ```bash
-brew tap cerby-engineering/tap
-brew install host-man
+brew tap cerby-engineering/host-man https://github.com/cerby-engineering/host-man
+brew install hostman
 ```
 
 This installs the `hostman` binary.

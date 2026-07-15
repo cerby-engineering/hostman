@@ -5,16 +5,16 @@
 # This is the SOURCE TEMPLATE for the Homebrew formula.
 # Location: cerby-engineering/host-man/homebrew/host-man.rb.template
 #
-# The GENERATED formula lives at:
-#   cerby-engineering/homebrew-tap/Formula/host-man.rb
+# This repo is its own Homebrew tap. The GENERATED formula lives at:
+#   cerby-engineering/host-man/Formula/host-man.rb
 #
 # DO NOT edit the generated formula directly - your changes will be
 # overwritten on the next release. Edit THIS template instead.
 #
 # How it works:
-#   1. When host-man releases, the CI workflow fetches this template
-#   2. Variables like ${version}, ${tag}, etc. are substituted
-#   3. The result is committed to homebrew-tap/Formula/host-man.rb
+#   1. When host-man releases, the CI workflow renders this template
+#   2. Variables like ${version}, ${tag}, etc. are substituted (envsubst)
+#   3. The result is committed to Formula/host-man.rb on main
 #
 # Variables available for substitution:
 #   ${version}    - Semver version (e.g., 0.1.6+abc1234)
