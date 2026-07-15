@@ -1,0 +1,8 @@
+# Binaries
+bin/
+
+# Go build artifacts
+*.test
+*.out
+
+.DS_STORE

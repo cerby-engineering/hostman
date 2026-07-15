@@ -1,0 +1,135 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
+      patch: ${{ steps.version.outputs.patch }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Calculate version
+        id: version
+        run: |
+          PATCH="${{ github.run_number }}+$(git rev-parse --short HEAD)"
+          VERSION=$(make QUIET=1 version PATCH="$PATCH")
+          TAG=$(echo "$VERSION" | sed 's/+/-/g')
+          echo "patch=$PATCH" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+  build:
+    needs: version
+    strategy:
+      matrix:
+        include:
+          - name: darwin-arm64
+            goarch: arm64
+          - name: darwin-x86_64
+            goarch: amd64
+
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+
+      - name: Build
+        env:
+          GOOS: darwin
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          MODULE=$(grep ^module go.mod | awk '{print $2}')
+          go build -buildvcs=false \
+            -ldflags="-X '${MODULE}/consts.Version=${{ needs.version.outputs.version }}'" \
+            -o hostman
+
+      - name: Package
+        run: |
+          tar -czvf host-man-${{ matrix.name }}-v${{ needs.version.outputs.tag }}.tar.gz \
+            hostman
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: host-man-${{ matrix.name }}
+          path: host-man-*.tar.gz
+
+  release:
+    needs: [version, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      arm64_sha: ${{ steps.sha.outputs.arm64 }}
+      x86_64_sha: ${{ steps.sha.outputs.x86_64 }}
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: List artifacts
+        run: ls -la artifacts/
+
+      - name: Calculate SHA256
+        id: sha
+        run: |
+          ARM64_SHA=$(shasum -a 256 artifacts/*darwin-arm64*.tar.gz | cut -d' ' -f1)
+          X86_64_SHA=$(shasum -a 256 artifacts/*darwin-x86_64*.tar.gz | cut -d' ' -f1)
+          echo "arm64=$ARM64_SHA" >> $GITHUB_OUTPUT
+          echo "x86_64=$X86_64_SHA" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ needs.version.outputs.tag }}
+          name: v${{ needs.version.outputs.version }}
+          files: artifacts/*.tar.gz
+          generate_release_notes: true
+
+  update-homebrew:
+    needs: [version, release]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Homebrew tap update
+        env:
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          VERSION: ${{ needs.version.outputs.version }}
+          TAG: ${{ needs.version.outputs.tag }}
+          ARM64_SHA: ${{ needs.release.outputs.arm64_sha }}
+          X86_64_SHA: ${{ needs.release.outputs.x86_64_sha }}
+        run: |
+          set -x
+          jq -Mc -n \
+            --arg formula "host-man" \
+            --arg template_url "https://raw.githubusercontent.com/cerby-engineering/host-man/v${TAG}/homebrew/host-man.rb.template" \
+            --arg version "$VERSION" \
+            --arg tag "$TAG" \
+            --arg arm64_sha "$ARM64_SHA" \
+            --arg x86_64_sha "$X86_64_SHA" \
+            '{
+              event_type: "update-formula",
+              client_payload: {
+                formula: $formula,
+                template_url: $template_url,
+                version: $version,
+                tag: $tag,
+                arm64_sha: $arm64_sha,
+                x86_64_sha: $x86_64_sha
+              }
+            }' \
+            | gh api repos/cerby-engineering/homebrew-tap/dispatches --input -
