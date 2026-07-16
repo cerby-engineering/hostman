@@ -56,14 +56,14 @@ jobs:
 
       - name: Package
         run: |
-          tar -czvf host-man-${{ matrix.name }}-v${{ needs.version.outputs.tag }}.tar.gz \
+          tar -czvf hostman-${{ matrix.name }}-v${{ needs.version.outputs.tag }}.tar.gz \
             hostman
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: host-man-${{ matrix.name }}
-          path: host-man-*.tar.gz
+          name: hostman-${{ matrix.name }}
+          path: hostman-*.tar.gz
 
   release:
     needs: [version, build]
@@ -117,13 +117,13 @@ jobs:
           x86_64_sha: ${{ needs.release.outputs.x86_64_sha }}
         run: |
           mkdir -p Formula
-          envsubst < homebrew/host-man.rb.template > Formula/host-man.rb
-          cat Formula/host-man.rb
+          envsubst < homebrew/hostman.rb.template > Formula/hostman.rb
+          cat Formula/hostman.rb
 
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Formula/host-man.rb
-          git diff --staged --quiet || git commit -m "Update host-man formula to v${{ needs.version.outputs.version }} [skip ci]"
+          git add Formula/hostman.rb
+          git diff --staged --quiet || git commit -m "Update hostman formula to v${{ needs.version.outputs.version }} [skip ci]"
           git push

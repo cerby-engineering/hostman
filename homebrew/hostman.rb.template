@@ -3,18 +3,18 @@
 # ============================================================================
 #
 # This is the SOURCE TEMPLATE for the Homebrew formula.
-# Location: cerby-engineering/host-man/homebrew/host-man.rb.template
+# Location: cerby-engineering/hostman/homebrew/hostman.rb.template
 #
 # This repo is its own Homebrew tap. The GENERATED formula lives at:
-#   cerby-engineering/host-man/Formula/host-man.rb
+#   cerby-engineering/hostman/Formula/hostman.rb
 #
 # DO NOT edit the generated formula directly - your changes will be
 # overwritten on the next release. Edit THIS template instead.
 #
 # How it works:
-#   1. When host-man releases, the CI workflow renders this template
+#   1. When hostman releases, the CI workflow renders this template
 #   2. Variables like ${version}, ${tag}, etc. are substituted (envsubst)
-#   3. The result is committed to Formula/host-man.rb on main
+#   3. The result is committed to Formula/hostman.rb on main
 #
 # Variables available for substitution:
 #   ${version}    - Semver version (e.g., 0.1.6+abc1234)
@@ -24,19 +24,19 @@
 #
 # ============================================================================
 
-class HostMan < Formula
+class Hostman < Formula
   desc "Manage bracketed blocks of entries in /etc/hosts"
-  homepage "https://github.com/cerby-engineering/host-man"
+  homepage "https://github.com/cerby-engineering/hostman"
   license "MIT"
   version "${version}"
 
   on_macos do
     on_arm do
-      url "https://github.com/cerby-engineering/host-man/releases/download/v${tag}/host-man-darwin-arm64-v${tag}.tar.gz"
+      url "https://github.com/cerby-engineering/hostman/releases/download/v${tag}/hostman-darwin-arm64-v${tag}.tar.gz"
       sha256 "${arm64_sha}"
     end
     on_intel do
-      url "https://github.com/cerby-engineering/host-man/releases/download/v${tag}/host-man-darwin-x86_64-v${tag}.tar.gz"
+      url "https://github.com/cerby-engineering/hostman/releases/download/v${tag}/hostman-darwin-x86_64-v${tag}.tar.gz"
       sha256 "${x86_64_sha}"
     end
   end

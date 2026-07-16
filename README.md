@@ -1,4 +1,4 @@
-# host-man
+# hostman
 
 A small CLI for managing bracketed blocks of entries in `/etc/hosts`.
 
@@ -21,13 +21,10 @@ needed since it's public). Homebrew treats any non-core tap as untrusted by
 default, so you'll need to explicitly trust it once before installing:
 
 ```bash
-brew tap cerby-engineering/host-man https://github.com/cerby-engineering/host-man
-brew trust cerby-engineering/host-man
-brew install host-man
+brew tap cerby-engineering/hostman https://github.com/cerby-engineering/hostman
+brew trust cerby-engineering/hostman
+brew install hostman
 ```
-
-This installs the `hostman` binary (the formula is named `host-man`, matching
-the repo/tap name, but the binary it installs is `hostman`).
 
 ### From Source
 
