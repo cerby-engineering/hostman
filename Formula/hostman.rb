@@ -13,14 +13,14 @@
 #
 # How it works:
 #   1. When hostman releases, the CI workflow renders this template
-#   2. Variables like 0.1.4+db4310c, 0.1.4-db4310c, etc. are substituted (envsubst)
+#   2. Variables like 0.1.5+dfc60de, 0.1.5-dfc60de, etc. are substituted (envsubst)
 #   3. The result is committed to Formula/hostman.rb on main
 #
 # Variables available for substitution:
-#   0.1.4+db4310c    - Semver version (e.g., 0.1.6+abc1234)
-#   0.1.4-db4310c        - Release tag suffix (e.g., 0.1.6-abc1234)
-#   fec5d00f7786f0d31ca25d0bd9bcb95c8c3bc57b1ef80bad213ef9cceeee669d  - SHA256 of the arm64 tarball
-#   9808f12acbf3d9bd50dfbfa9d631a170ead281a3f8bf26cf62fb2d86fe26e961 - SHA256 of the x86_64 tarball
+#   0.1.5+dfc60de    - Semver version (e.g., 0.1.6+abc1234)
+#   0.1.5-dfc60de        - Release tag suffix (e.g., 0.1.6-abc1234)
+#   2dd5a8041cb13cc5a81c5f9b13000903abe19d455fb1da0d4b303111fedf5c6f  - SHA256 of the arm64 tarball
+#   810fe444a48f624f2c9af8c558fd981ed77b783ef09d0943a12acb61e53f03a2 - SHA256 of the x86_64 tarball
 #
 # ============================================================================
 
@@ -28,16 +28,16 @@ class Hostman < Formula
   desc "Manage bracketed blocks of entries in /etc/hosts"
   homepage "https://github.com/cerby-engineering/hostman"
   license "MIT"
-  version "0.1.4+db4310c"
+  version "0.1.5+dfc60de"
 
   on_macos do
     on_arm do
-      url "https://github.com/cerby-engineering/hostman/releases/download/v0.1.4-db4310c/hostman-darwin-arm64-v0.1.4-db4310c.tar.gz"
-      sha256 "fec5d00f7786f0d31ca25d0bd9bcb95c8c3bc57b1ef80bad213ef9cceeee669d"
+      url "https://github.com/cerby-engineering/hostman/releases/download/v0.1.5-dfc60de/hostman-darwin-arm64-v0.1.5-dfc60de.tar.gz"
+      sha256 "2dd5a8041cb13cc5a81c5f9b13000903abe19d455fb1da0d4b303111fedf5c6f"
     end
     on_intel do
-      url "https://github.com/cerby-engineering/hostman/releases/download/v0.1.4-db4310c/hostman-darwin-x86_64-v0.1.4-db4310c.tar.gz"
-      sha256 "9808f12acbf3d9bd50dfbfa9d631a170ead281a3f8bf26cf62fb2d86fe26e961"
+      url "https://github.com/cerby-engineering/hostman/releases/download/v0.1.5-dfc60de/hostman-darwin-x86_64-v0.1.5-dfc60de.tar.gz"
+      sha256 "810fe444a48f624f2c9af8c558fd981ed77b783ef09d0943a12acb61e53f03a2"
     end
   end
 
