@@ -17,14 +17,17 @@ Boundary-tunneled targets.
 ### Via Homebrew (recommended)
 
 This repo is its own Homebrew tap (no separate tap repo, and no GitHub auth
-needed since it's public):
+needed since it's public). Homebrew treats any non-core tap as untrusted by
+default, so you'll need to explicitly trust it once before installing:
 
 ```bash
 brew tap cerby-engineering/host-man https://github.com/cerby-engineering/host-man
-brew install hostman
+brew trust cerby-engineering/host-man
+brew install host-man
 ```
 
-This installs the `hostman` binary.
+This installs the `hostman` binary (the formula is named `host-man`, matching
+the repo/tap name, but the binary it installs is `hostman`).
 
 ### From Source
 
