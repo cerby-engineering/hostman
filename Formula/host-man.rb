@@ -13,14 +13,14 @@
 #
 # How it works:
 #   1. When host-man releases, the CI workflow renders this template
-#   2. Variables like 0.1.2+20447a3, 0.1.2-20447a3, etc. are substituted (envsubst)
+#   2. Variables like 0.1.3+1f321e0, 0.1.3-1f321e0, etc. are substituted (envsubst)
 #   3. The result is committed to Formula/host-man.rb on main
 #
 # Variables available for substitution:
-#   0.1.2+20447a3    - Semver version (e.g., 0.1.6+abc1234)
-#   0.1.2-20447a3        - Release tag suffix (e.g., 0.1.6-abc1234)
-#   7d8421ed252ed15be88e21ac8fc1e37bebd0d4d07ef5a126d5d8ada6d2e0fc44  - SHA256 of the arm64 tarball
-#   8aad074b409112a58a693e84a93f40f9d66b8d48dd4bfc8fe74d2b036c36d183 - SHA256 of the x86_64 tarball
+#   0.1.3+1f321e0    - Semver version (e.g., 0.1.6+abc1234)
+#   0.1.3-1f321e0        - Release tag suffix (e.g., 0.1.6-abc1234)
+#   40cf039a54b8ef3f861da44949b2f87a283de320549da8058c043444f24f3085  - SHA256 of the arm64 tarball
+#   e364d8ddfb4ee603f39031430f002193365531c58d0c54808e36ee3148b02fb6 - SHA256 of the x86_64 tarball
 #
 # ============================================================================
 
@@ -28,16 +28,16 @@ class HostMan < Formula
   desc "Manage bracketed blocks of entries in /etc/hosts"
   homepage "https://github.com/cerby-engineering/host-man"
   license "MIT"
-  version "0.1.2+20447a3"
+  version "0.1.3+1f321e0"
 
   on_macos do
     on_arm do
-      url "https://github.com/cerby-engineering/host-man/releases/download/v0.1.2-20447a3/host-man-darwin-arm64-v0.1.2-20447a3.tar.gz"
-      sha256 "7d8421ed252ed15be88e21ac8fc1e37bebd0d4d07ef5a126d5d8ada6d2e0fc44"
+      url "https://github.com/cerby-engineering/host-man/releases/download/v0.1.3-1f321e0/host-man-darwin-arm64-v0.1.3-1f321e0.tar.gz"
+      sha256 "40cf039a54b8ef3f861da44949b2f87a283de320549da8058c043444f24f3085"
     end
     on_intel do
-      url "https://github.com/cerby-engineering/host-man/releases/download/v0.1.2-20447a3/host-man-darwin-x86_64-v0.1.2-20447a3.tar.gz"
-      sha256 "8aad074b409112a58a693e84a93f40f9d66b8d48dd4bfc8fe74d2b036c36d183"
+      url "https://github.com/cerby-engineering/host-man/releases/download/v0.1.3-1f321e0/host-man-darwin-x86_64-v0.1.3-1f321e0.tar.gz"
+      sha256 "e364d8ddfb4ee603f39031430f002193365531c58d0c54808e36ee3148b02fb6"
     end
   end
 
