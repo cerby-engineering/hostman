@@ -190,6 +190,15 @@ var rmCmd = &cobra.Command{
 	},
 }
 
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Print the hostman version",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		fmt.Println(consts.Version)
+		return nil
+	},
+}
+
 var rootCmd = &cobra.Command{
 	Use:          "hostman",
 	Short:        "Manage /etc/hosts entries",
@@ -210,6 +219,7 @@ func init() {
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(rmCmd)
 	rootCmd.AddCommand(lsCmd)
+	rootCmd.AddCommand(versionCmd)
 }
 
 func main() {
